@@ -2,13 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VunaWise — Data = Insights = Productivity</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>VunaWise — Data, then insights, then a better harvest</title>
+    <meta name="description" content="Put the farm notebook down. VunaWise lets Kenyan farms record births, feeding, sales and harvests on the phone, and adds it all up on one dashboard.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Kalam&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
+        /* ════════════════════════════════════════════════
+           BRAND TOKENS
+           ════════════════════════════════════════════════ */
         :root {
+            /* VunaWise brand colours */
             --green-deep:   #006B35;
             --green-mid:    #008C44;
             --green-bright: #52C41A;
@@ -18,832 +23,516 @@
             --text:         #1A2E1E;
             --muted:        #5A7060;
             --white:        #FFFFFF;
+
+            /* Tints made from the brand greens */
+            --line:         #D5E5D6;
+            --tint:         #EAF4E4;
+
+            /* Type */
+            --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+            --body:    "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
         }
 
-        html { scroll-behavior: smooth; }
-
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--cream);
+            font-family: var(--body);
+            font-size: 1.0625rem;
+            line-height: 1.6;
+            background: var(--white);
             color: var(--text);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
+        a { color: inherit; }
+        img, svg { max-width: 100%; }
+        :focus-visible { outline: 3px solid var(--green-bright); outline-offset: 3px; border-radius: 4px; }
+        ul { list-style: none; }
 
-        /* ── NAV ── */
-        nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 6%;
-            background: rgba(247, 249, 244, 0.92);
+        .wrap { width: min(1120px, 100% - 2.5rem); margin-inline: auto; }
+        .section { padding: 5.5rem 0; }
+        .section.cream { background: var(--cream); }
+        .sec-head { max-width: 40rem; margin-bottom: 3rem; }
+        .sec-head p { color: var(--muted); }
+
+        .h1, .h2, .h3 { font-family: var(--display); color: var(--dark); text-wrap: balance; }
+        .h1 { font-weight: 800; font-size: clamp(2.6rem, 6.2vw, 4.9rem); line-height: .98; letter-spacing: -.035em; margin-bottom: 1.5rem; max-width: 12ch; }
+        .h2 { font-weight: 800; font-size: clamp(1.9rem, 3.8vw, 2.9rem); line-height: 1.05; letter-spacing: -.025em; margin-bottom: 1rem; }
+        .h3 { font-weight: 700; font-size: 1.3rem; line-height: 1.25; letter-spacing: -.01em; margin-bottom: .45rem; }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-height: 48px; padding: .7rem 1.35rem; border-radius: 999px;
+            font-family: var(--body); font-weight: 700; font-size: 1rem; text-decoration: none;
+            border: 2px solid var(--green-deep);
+            transition: background-color .15s, border-color .15s;
+        }
+        .btn-primary { background: var(--green-deep); color: var(--white); }
+        .btn-primary:hover { background: var(--green-mid); border-color: var(--green-mid); }
+        .btn-ghost { background: transparent; color: var(--dark); border-color: var(--line); }
+        .btn-ghost:hover { border-color: var(--green-deep); }
+
+        /* ── Tags ── */
+        .tag { display: inline-block; font-size: .85rem; font-weight: 700; padding: .2rem .75rem; border-radius: 999px; }
+        .tag-live { background: var(--tint); color: var(--green-deep); }
+        .tag-soon { border: 1.5px solid var(--line); color: var(--muted); }
+
+        /* ════════════════════════════════════════════════
+           NAV
+           ════════════════════════════════════════════════ */
+        .site-header {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, .94);
             backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0,107,53,0.08);
+            border-bottom: 1px solid var(--line);
+            padding-top: env(safe-area-inset-top, 0px);
+        }
+        .nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; }
+        .brand {
+            display: flex; align-items: center; gap: .6rem; text-decoration: none;
+            font-family: var(--display); font-weight: 800; font-size: 1.35rem; letter-spacing: -.01em; color: var(--dark);
+        }
+        .brand svg { width: 40px; height: 40px; }
+        .nav-links { display: flex; align-items: center; gap: 1.4rem; font-size: .97rem; }
+        .nav-text { text-decoration: none; color: var(--muted); }
+        .nav-text:hover { color: var(--green-deep); }
+        .nav .btn { min-height: 42px; padding: .5rem 1.1rem; font-size: .95rem; }
+        @media (max-width: 860px) { .nav-text { display: none; } }
+        @media (max-width: 420px) {
+            .brand { font-size: 1.15rem; } .brand svg { width: 32px; height: 32px; }
+            .nav-links { gap: .45rem; } .nav .btn { padding: .45rem .8rem; font-size: .9rem; }
         }
 
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
+        /* ════════════════════════════════════════════════
+           HERO
+           ════════════════════════════════════════════════ */
+        .hero { display: grid; grid-template-columns: 1.05fr .95fr; gap: 3rem; align-items: center; padding: 3.5rem 0 5rem; }
+        .lede { font-size: clamp(1.08rem, 1.6vw, 1.25rem); color: var(--muted); max-width: 36rem; margin-bottom: 2rem; }
+        .cta-row { display: flex; flex-wrap: wrap; gap: .75rem; }
+
+        .scene { position: relative; min-height: 470px; }
+        .book {
+            position: absolute; left: 0; top: 10px; width: 74%;
+            padding: 2.2rem 1.4rem 2rem 3rem; color: #23324A;
+            border-radius: 6px 14px 14px 6px; transform: rotate(-4deg);
+            background-color: #FBFAF4;
+            background-image:
+                linear-gradient(90deg, transparent 2.1rem, #E7A6A0 2.1rem, #E7A6A0 2.25rem, transparent 2.25rem),
+                repeating-linear-gradient(#FBFAF4 0 2.15rem, #BFD3E4 2.15rem 2.22rem);
+            box-shadow: 0 18px 40px -18px rgba(13, 31, 18, .45);
+            font-family: "Kalam", "Comic Sans MS", cursive;
         }
+        .book-date { font-size: 1rem; margin: -.9rem 0 .4rem; color: #6B7890; }
+        .hw { font-size: 1.05rem; line-height: 2.22rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: ghost .7s ease-in forwards; }
+        .hw s { opacity: .7; }
 
-        .nav-logo img {
-            height: 36px;
-            width: 36px;
-            object-fit: contain;
-            border-radius: 6px;
+        .phone {
+            position: absolute; right: 0; bottom: 0; width: 52%; max-width: 270px;
+            background: var(--white); color: var(--dark);
+            border: 10px solid var(--dark); border-radius: 34px; padding: 1rem .8rem 1.2rem;
+            box-shadow: 0 24px 50px -20px rgba(0, 107, 53, .5);
         }
-
-        .nav-logo span {
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--green-deep);
-            letter-spacing: 0.04em;
+        .phone-bar {
+            display: flex; align-items: center; gap: .45rem;
+            font-family: var(--display); font-weight: 700; font-size: 1rem;
+            padding: 0 .3rem .7rem; border-bottom: 1px solid var(--line); margin-bottom: .6rem;
         }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-            list-style: none;
+        .phone-bar svg { width: 26px; height: 26px; }
+        .recs { display: grid; gap: .45rem; }
+        .rec {
+            background: var(--tint); border-radius: 12px; padding: .55rem .75rem;
+            font-size: .9rem; line-height: 1.3;
+            opacity: 0; transform: translateX(-24px);
+            animation: land .5s cubic-bezier(.2, .9, .3, 1.1) forwards;
         }
+        .rec b { display: block; }
+        .rec span { color: var(--muted); }
+        .rec.due { background: var(--white); border: 2px solid var(--green-bright); }
 
-        .nav-links a {
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--muted);
-            transition: color 0.2s;
+        .hw.d1 { animation-delay: .9s; }  .rec.d1 { animation-delay: 1.2s; }
+        .hw.d2 { animation-delay: 1.3s; } .rec.d2 { animation-delay: 1.6s; }
+        .hw.d3 { animation-delay: 1.7s; } .rec.d3 { animation-delay: 2s; }
+        .hw.d4 { animation-delay: 2.1s; } .rec.d4 { animation-delay: 2.4s; }
+        .hw.d5 { animation-delay: 2.5s; } .rec.d5 { animation-delay: 2.8s; }
+        @keyframes ghost { to { opacity: .3; filter: blur(.6px); transform: translateX(10px); } }
+        @keyframes land { to { opacity: 1; transform: none; } }
+
+        @media (max-width: 860px) {
+            .hero { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.5rem 0 3.5rem; }
+            .scene { min-height: 400px; width: min(460px, 100%); margin-inline: auto; }
+            .book { width: 78%; } .phone { width: 64%; }
         }
+        @media (max-width: 420px) { .hw { font-size: .95rem; } .book { padding-left: 2.7rem; } }
 
-        .nav-links a:hover { color: var(--green-deep); }
-
-        .nav-cta {
-            background: var(--green-deep);
-            color: var(--white) !important;
-            padding: 10px 22px;
-            border-radius: 6px;
-            font-weight: 600 !important;
-            transition: background 0.2s, transform 0.2s !important;
+        /* ════════════════════════════════════════════════
+           PAPER FORGETS
+           ════════════════════════════════════════════════ */
+        .losses { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .losses svg { width: 100%; height: auto; max-width: 220px; display: block; margin-bottom: .8rem; }
+        .losses p { color: var(--muted); font-size: 1rem; }
+        .answer {
+            margin-top: 3rem; padding-top: 1.5rem; border-top: 2px solid var(--dark); max-width: 44rem;
+            font-family: var(--display); font-weight: 700; color: var(--dark);
+            font-size: clamp(1.25rem, 2.2vw, 1.6rem); line-height: 1.3; letter-spacing: -.01em;
         }
+        @media (max-width: 960px) { .losses { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 520px) { .losses { grid-template-columns: 1fr; } }
 
-        .nav-cta:hover {
-            background: var(--green-mid) !important;
-            transform: translateY(-1px);
-            color: var(--white) !important;
+        /* ════════════════════════════════════════════════
+           MIXED FARMS
+           ════════════════════════════════════════════════ */
+        .ent { border-top: 2px solid var(--dark); }
+        .ent li { display: grid; grid-template-columns: minmax(10rem, 16rem) 1fr; gap: 1rem 2.5rem; padding: 1.6rem 0; border-bottom: 1px solid var(--line); }
+        .ent-name { font-family: var(--display); font-weight: 700; color: var(--dark); font-size: clamp(1.5rem, 2.6vw, 2rem); letter-spacing: -.02em; line-height: 1.1; }
+        .ent-name small { display: block; margin-top: .3rem; font-family: var(--body); font-weight: 400; font-size: .95rem; letter-spacing: 0; color: var(--muted); }
+        .ent p { max-width: 44rem; }
+        @media (max-width: 640px) { .ent li { grid-template-columns: 1fr; gap: .4rem; } }
+
+        /* ════════════════════════════════════════════════
+           FEATURES
+           ════════════════════════════════════════════════ */
+        .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+        .feature { border-top: 3px solid var(--green-deep); padding-top: 1.5rem; display: flex; flex-direction: column; align-items: flex-start; }
+        .feature p { color: var(--muted); margin-bottom: 1.2rem; }
+        .feature .tag { margin-top: auto; }
+        .icon {
+            width: 48px; height: 48px; border-radius: 14px; margin-bottom: 1.1rem;
+            display: grid; place-items: center; background: var(--tint); color: var(--green-deep);
         }
+        .icon svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        @media (max-width: 860px) { .features { grid-template-columns: 1fr; gap: 2.25rem; } }
 
-        /* ── HERO ── */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 120px 6% 80px;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--green-deep) 100%);
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-
-        /* Animated leaf */
-        .hero-leaf {
-            position: absolute;
-            right: -80px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 600px;
-            height: 600px;
-            opacity: 0.06;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(-50%) rotate(0deg); }
-            50% { transform: translateY(-53%) rotate(3deg); }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 680px;
-        }
-
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(82, 196, 26, 0.15);
-            border: 1px solid rgba(82, 196, 26, 0.3);
-            color: var(--green-leaf);
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            padding: 6px 14px;
-            border-radius: 20px;
-            margin-bottom: 28px;
-        }
-
-        .hero-eyebrow::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: var(--green-bright);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.4); }
-        }
-
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(42px, 6vw, 72px);
-            font-weight: 900;
-            color: var(--white);
-            line-height: 1.1;
-            margin-bottom: 12px;
-        }
-
-        .hero h1 em {
-            font-style: normal;
-            color: var(--green-bright);
-        }
-
-        .hero-tagline {
-            font-size: 16px;
-            font-weight: 500;
-            color: rgba(255,255,255,0.5);
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-        }
-
-        .hero-tagline span {
-            color: var(--green-leaf);
-            font-weight: 600;
-        }
-
-        .hero p {
-            font-size: 18px;
-            line-height: 1.7;
-            color: rgba(255,255,255,0.75);
-            margin-bottom: 44px;
-            max-width: 540px;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--green-bright);
-            color: var(--dark);
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 15px;
-            padding: 14px 28px;
-            border-radius: 8px;
-            transition: all 0.25s;
-            box-shadow: 0 4px 20px rgba(82,196,26,0.3);
-        }
-
-        .btn-primary:hover {
-            background: var(--green-leaf);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(82,196,26,0.4);
-        }
-
-        .btn-ghost {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            border: 1.5px solid rgba(255,255,255,0.25);
-            color: var(--white);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 15px;
-            padding: 14px 28px;
-            border-radius: 8px;
-            transition: all 0.25s;
-        }
-
-        .btn-ghost:hover {
-            border-color: rgba(255,255,255,0.6);
-            background: rgba(255,255,255,0.06);
-        }
-
-        /* ── TRUST BAR ── */
-        .trust-bar {
-            background: var(--white);
-            border-bottom: 1px solid rgba(0,107,53,0.08);
-            padding: 20px 6%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 48px;
-            flex-wrap: wrap;
-        }
-
-        .trust-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            color: var(--muted);
-            font-weight: 500;
-        }
-
-        .trust-item span:first-child {
-            font-size: 20px;
-        }
-
-        /* ── FEATURES ── */
-        .features {
-            padding: 100px 6%;
-            background: var(--cream);
-        }
-
-        .section-label {
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            color: var(--green-mid);
-            margin-bottom: 14px;
-        }
-
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(32px, 4vw, 48px);
-            font-weight: 700;
-            color: var(--dark);
-            line-height: 1.2;
-            margin-bottom: 16px;
-            max-width: 560px;
-        }
-
-        .section-subtitle {
-            font-size: 17px;
-            color: var(--muted);
-            line-height: 1.7;
-            max-width: 520px;
-            margin-bottom: 64px;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 28px;
-        }
-
-        .feature-card {
-            background: var(--white);
-            border: 1px solid rgba(0,107,53,0.1);
-            border-radius: 16px;
-            padding: 36px 32px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--green-deep), var(--green-bright));
-            transform: scaleX(0);
-            transition: transform 0.3s;
-            transform-origin: left;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 48px rgba(0,107,53,0.10);
-            border-color: rgba(0,107,53,0.2);
-        }
-
-        .feature-card:hover::after { transform: scaleX(1); }
-
-        .feature-icon {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin-bottom: 24px;
-        }
-
-        .feature-card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 12px;
-            line-height: 1.3;
-        }
-
-        .feature-card p {
-            font-size: 15px;
-            color: var(--muted);
-            line-height: 1.7;
-        }
-
-        .feature-tag {
-            display: inline-block;
-            margin-top: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--green-mid);
-            background: rgba(0,140,68,0.08);
-            padding: 4px 10px;
-            border-radius: 4px;
-        }
-
-        /* ── HOW IT WORKS ── */
-        .how {
-            padding: 100px 6%;
-            background: var(--white);
-        }
-
-        .how-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-            margin-top: 64px;
-        }
-
-        .how-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 36px;
-        }
-
-        .how-step {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
+        /* ════════════════════════════════════════════════
+           HOW IT WORKS
+           ════════════════════════════════════════════════ */
+        .how-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4.5rem; align-items: center; }
+        .steps { display: flex; flex-direction: column; gap: 2rem; }
+        .step { display: flex; gap: 1.1rem; align-items: flex-start; }
         .step-num {
-            width: 36px;
-            height: 36px;
-            min-width: 36px;
-            background: var(--green-deep);
-            color: var(--white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 700;
-            margin-top: 2px;
+            flex: 0 0 38px; height: 38px; border-radius: 50%;
+            display: grid; place-items: center;
+            background: var(--green-deep); color: var(--white);
+            font-family: var(--display); font-weight: 800; font-size: 1rem;
         }
+        .step p { color: var(--muted); font-size: 1rem; }
 
-        .step-content h4 {
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 6px;
+        .dash {
+            background: var(--white); border: 2px solid var(--dark); border-radius: 24px;
+            padding: 1.6rem; box-shadow: 0 24px 50px -24px rgba(0, 107, 53, .45);
         }
-
-        .step-content p {
-            font-size: 14px;
-            color: var(--muted);
-            line-height: 1.65;
+        .dash-head {
+            display: flex; align-items: center; gap: .55rem;
+            font-family: var(--display); font-weight: 700; font-size: 1.1rem; color: var(--dark);
+            padding-bottom: 1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--line);
         }
+        .dash-head svg { width: 30px; height: 30px; }
+        .metrics { display: grid; gap: .7rem; }
+        .metric { background: var(--cream); border-radius: 14px; padding: .9rem 1.1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+        .metric-label { font-size: .95rem; color: var(--muted); }
+        .metric-bar-wrap { width: 120px; height: 6px; margin-top: .45rem; background: var(--line); border-radius: 3px; overflow: hidden; }
+        .metric-bar { height: 100%; background: var(--green-bright); border-radius: 3px; }
+        .metric-value { font-family: var(--display); font-weight: 800; font-size: 1.3rem; color: var(--green-deep); white-space: nowrap; }
+        .dash-note { margin-top: 1rem; font-size: .85rem; color: var(--muted); text-align: center; }
+        @media (max-width: 900px) { .how-grid { grid-template-columns: 1fr; gap: 3rem; } }
 
-        .how-visual {
-            background: linear-gradient(135deg, var(--dark), var(--green-deep));
-            border-radius: 20px;
-            padding: 40px;
-            position: relative;
-            overflow: hidden;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        /* ════════════════════════════════════════════════
+           CLOSING CTA
+           ════════════════════════════════════════════════ */
+        .closing { background: var(--green-deep); color: var(--white); border-radius: 28px; padding: clamp(2.5rem, 6vw, 4.5rem); }
+        .closing .h2 { color: var(--white); }
+        .closing > p { color: #CFE6D2; max-width: 34rem; margin-bottom: 2.5rem; }
+        .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .option {
+            display: flex; flex-direction: column; gap: .5rem; text-decoration: none;
+            padding: 1.5rem; border-radius: 18px; border: 1.5px solid rgba(255, 255, 255, .22);
+            transition: background-color .15s, border-color .15s;
         }
+        .option:hover { background: rgba(255, 255, 255, .07); border-color: var(--green-leaf); }
+        .option .icon { background: rgba(255, 255, 255, .12); color: var(--green-leaf); margin-bottom: .4rem; }
+        .option .h3 { color: var(--white); font-size: 1.15rem; margin: 0; }
+        .option p { color: #CFE6D2; font-size: .97rem; }
+        .option-link { margin-top: auto; padding-top: .4rem; font-weight: 700; color: var(--green-leaf); }
+        @media (max-width: 860px) { .options { grid-template-columns: 1fr; } }
 
-        .how-visual::before {
-            content: '';
-            position: absolute;
-            top: -60px;
-            right: -60px;
-            width: 240px;
-            height: 240px;
-            background: radial-gradient(circle, rgba(82,196,26,0.15) 0%, transparent 70%);
-        }
+        /* ════════════════════════════════════════════════
+           FOOTER
+           ════════════════════════════════════════════════ */
+        footer { padding: 3rem 0 calc(2.5rem + env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: .95rem; }
+        .foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; border-top: 1px solid var(--line); padding-top: 1.75rem; }
+        .foot .brand { font-size: 1.1rem; }
+        .foot .brand svg { width: 30px; height: 30px; }
 
-        .metric-row {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .metric-item {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .metric-label {
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-        }
-
-        .metric-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--green-bright);
-        }
-
-        .metric-bar-wrap {
-            margin-top: 8px;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .metric-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--green-deep), var(--green-bright));
-            border-radius: 2px;
-        }
-
-        /* ── CTA SECTION ── */
-        .cta-section {
-            padding: 100px 6%;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--green-deep) 100%);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-section::before {
-            content: '🌱';
-            position: absolute;
-            font-size: 300px;
-            opacity: 0.03;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .cta-section h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(32px, 4vw, 52px);
-            font-weight: 900;
-            color: var(--white);
-            margin-bottom: 16px;
-            position: relative;
-        }
-
-        .cta-section p {
-            font-size: 18px;
-            color: rgba(255,255,255,0.7);
-            margin-bottom: 48px;
-            max-width: 480px;
-            margin-left: auto;
-            margin-right: auto;
-            position: relative;
-        }
-
-        .cta-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .cta-card {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 14px;
-            padding: 32px 24px;
-            text-decoration: none;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 12px;
-        }
-
-        .cta-card:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(82,196,26,0.4);
-            transform: translateY(-4px);
-        }
-
-        .cta-card-icon {
-            font-size: 36px;
-            margin-bottom: 4px;
-        }
-
-        .cta-card h3 {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--white);
-        }
-
-        .cta-card p {
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        .cta-card .card-link {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--green-bright);
-            margin-top: 4px;
-        }
-
-        /* ── FOOTER ── */
-        footer {
-            background: var(--dark);
-            padding: 40px 6%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-
-        .footer-logo img {
-            height: 28px;
-            width: 28px;
-            object-fit: contain;
-            border-radius: 4px;
-        }
-
-        .footer-logo span {
-            font-family: 'Playfair Display', serif;
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--white);
-            letter-spacing: 0.04em;
-        }
-
-        .footer-tagline {
-            font-size: 13px;
-            color: rgba(255,255,255,0.35);
-        }
-
-        .footer-right {
-            font-size: 13px;
-            color: rgba(255,255,255,0.35);
-        }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 900px) {
-            .features-grid { grid-template-columns: 1fr; }
-            .how-grid { grid-template-columns: 1fr; gap: 48px; }
-            .cta-cards { grid-template-columns: 1fr; max-width: 400px; }
-            .nav-links { display: none; }
-        }
-
-        @media (max-width: 600px) {
-            .hero-actions { flex-direction: column; }
-            .trust-bar { gap: 24px; }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .hw { animation: none; opacity: .35; }
+            .rec { animation: none; opacity: 1; transform: none; }
         }
     </style>
 </head>
 <body>
 
+<!-- VunaWise icon, drawn once and reused -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="mark" viewBox="220 250 580 530">
+        <g fill="none" stroke="#173D1F" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M268 349 330 380M238 439 310 450M247 540 321 519M693 379 755 349M712 450 785 439M703 519 775 540"/>
+            <path d="M280 760H692"/>
+            <path d="M512 760V415"/>
+            <path fill="#8CC63F" d="M300 760V714q0-12 12-12h36q12 0 12 12v46M378 760V680q0-12 12-12h36q12 0 12 12v80M533 760V612q0-12 12-12h36q12 0 12 12v148M611 760V664q0-12 12-12h36q12 0 12 12v96"/>
+            <path fill="#2E6B3A" d="M455 760V644q0-12 12-12h36q12 0 12 12v116"/>
+            <path fill="#8CC63F" d="M512 575C440 565 380 540 362 493C430 488 480 520 512 575ZM512 565C560 510 600 485 657 483C635 540 580 560 512 565ZM512 510C440 495 395 460 393 398C460 400 500 440 512 510ZM512 415C495 330 505 290 555 268C585 330 570 380 512 415Z"/>
+            <path d="M330 698 408 668 486 630 564 600 642 650"/>
+        </g>
+    </symbol>
+</svg>
+
 <!-- NAV -->
-<nav>
-    <a href="#" class="nav-logo">
-        <img src="VunaWise.png" alt="VunaWise Logo" onerror="this.style.display='none'">
-        <span>VunaWise</span>
-    </a>
-    <ul class="nav-links">
-        <li><a href="#features">Features</a></li>
-        <li><a href="#how">How it works</a></li>
-        <li><a href="https://substack.com/@vunawise" target="_blank">Blog</a></li>
-        <li><a href="https://app.vunawise.com" class="nav-cta">Farm Login</a></li>
-    </ul>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-    <!-- Animated background leaf -->
-    <svg class="hero-leaf" viewBox="0 0 200 200" fill="white" xmlns="http://www.w3.org/2000/svg">
-        <path d="M100 10 C140 10, 190 50, 190 100 C190 150, 150 190, 100 190 C50 190, 10 150, 10 100 C10 50, 60 10, 100 10Z"/>
-        <path d="M100 30 L100 170 M60 70 L100 100 L140 70 M60 120 L100 150 L140 120" stroke="rgba(0,0,0,0.3)" stroke-width="4" fill="none"/>
-    </svg>
-
-    <div class="hero-content">
-
-        <div class="hero-eyebrow">Farm Operations Management Platform</div>
-        <h1>Your farm,<br><em>always in focus.</em></h1>
-        <p class="hero-tagline">
-            <span>Data</span> = <span>Insights</span> = <span>Productivity</span>
-        </p>
-        <p>VunaWise gives small and medium farms the tools to manage animals, manage finances, plan seasons, and make smarter decisions — all in one place.</p>
-
-       
-        <div class="hero-actions">
-            <a href="mailto:limo.m@vunawise.com?subject=VunaWise Demo Request" class="btn-primary">
-                📅 Book a Demo
-            </a>
-            <a href="https://substack.com/@vunawise" target="_blank" class="btn-ghost">
-                ✍️ Read the Blog
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- TRUST BAR -->
-<div class="trust-bar">
-    <div class="trust-item"><span>🐷</span> Livestock Management</div>
-    <div class="trust-item"><span>🌾</span> Crop Planning</div>
-    <div class="trust-item"><span>📊</span> Financial Tracking</div>
-    <div class="trust-item"><span>📱</span> Weather + Price Forecasts</div>
-    <div class="trust-item"><span>Farm - to - Table traceability</span> </div>
-</div>
-
-<!-- FEATURES -->
-<section class="features" id="features">
-    <div class="section-label">What VunaWise does</div>
-    <h2 class="section-title">Everything your farm needs to grow.</h2>
-    <p class="section-subtitle">From the day an animal is born to the day a crop is harvested — VunaWise keeps you informed and in control.</p>
-
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon">💰</div>
-            <h3>Financial Tracking</h3>
-            <p>Record every expense and sale. See exactly where your money goes and where your revenue comes from — by enterprise, by month, by category. No more guessing.</p>
-            <span class="feature-tag">Live now</span>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🤖</div>
-            <h3>AI for Agriculture</h3>
-            <p>Research market prices for your specific crop variety. Get weather insights for your planting season. Make decisions based on data, not guesswork.</p>
-            <span class="feature-tag">Coming soon</span>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📋</div>
-            <h3>Traceability & Planning</h3>
-            <p>Build lifecycle playbooks for your crops and animals. Know what's coming weeks in advance — vaccinations, harvests, labor needs — so you can plan and budget properly.</p>
-            <span class="feature-tag">Live now</span>
-        </div>
-    </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="how" id="how">
-    <div class="section-label">How it works</div>
-    <h2 class="section-title">From your first animal to your first harvest report.</h2>
-
-    <div class="how-grid">
-        <div class="how-steps">
-            <div class="how-step">
-                <div class="step-num">1</div>
-                <div class="step-content">
-                    <h4>Set up your farm</h4>
-                    <p>Create your VunaWise account. Add your farm name, your team, and your enterprises — pigs, cattle, crops, poultry.</p>
-                </div>
-            </div>
-            <div class="how-step">
-                <div class="step-num">2</div>
-                <div class="step-content">
-                    <h4>Build your playbooks</h4>
-                    <p>Create lifecycle templates for your animals and crops. VunaWise calculates all task dates automatically from your planting or birth date.</p>
-                </div>
-            </div>
-            <div class="how-step">
-                <div class="step-num">3</div>
-                <div class="step-content">
-                    <h4>Track daily operations</h4>
-                    <p>Record sales, expenses, treatments and activities from the web or your phone. Your dashboard updates in real time.</p>
-                </div>
-            </div>
-            <div class="how-step">
-                <div class="step-num">4</div>
-                <div class="step-content">
-                    <h4>Make smarter decisions</h4>
-                    <p>See your net profit, identify your most productive enterprises, and plan your next season with confidence.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="how-visual">
-            <div class="metric-row">
-                <div style="color:rgba(255,255,255,0.5); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px;">BM's AgriFarm — Live Dashboard</div>
-                <div class="metric-item">
-                    <div>
-                        <div class="metric-label">Total Revenue</div>
-                        <div class="metric-bar-wrap" style="width:120px; margin-top:6px;"><div class="metric-bar" style="width:78%"></div></div>
-                    </div>
-                    <div class="metric-value">KES 664K</div>
-                </div>
-                <div class="metric-item">
-                    <div>
-                        <div class="metric-label">Active Animals</div>
-                        <div class="metric-bar-wrap" style="width:120px; margin-top:6px;"><div class="metric-bar" style="width:92%"></div></div>
-                    </div>
-                    <div class="metric-value">255</div>
-                </div>
-                <div class="metric-item">
-                    <div>
-                        <div class="metric-label">Net Profit</div>
-                        <div class="metric-bar-wrap" style="width:120px; margin-top:6px;"><div class="metric-bar" style="width:45%"></div></div>
-                    </div>
-                    <div class="metric-value">KES 104K</div>
-                </div>
-                <div class="metric-item">
-                    <div>
-                        <div class="metric-label">Upcoming Tasks</div>
-                        <div class="metric-bar-wrap" style="width:120px; margin-top:6px;"><div class="metric-bar" style="width:60%"></div></div>
-                    </div>
-                    <div class="metric-value">12 this week</div>
-                </div>
-                <div style="margin-top:16px; font-size:11px; color:rgba(255,255,255,0.25); text-align:center;">Sample data for illustration</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- CTA -->
-<section class="cta-section" id="contact">
-    <h2>Ready to grow smarter?</h2>
-    <p>Join the farmers already using VunaWise to run better operations.</p>
-
-    <div class="cta-cards">
-        <a href="https://substack.com/@vunawise" target="_blank" class="cta-card">
-            <div class="cta-card-icon">✍️</div>
-            <h3>Follow on Substack</h3>
-            <p>Farm insights, product updates and the story behind VunaWise.</p>
-            <span class="card-link">Read now →</span>
+<header class="site-header">
+    <div class="wrap nav">
+        <a class="brand" href="#" aria-label="VunaWise home">
+            <svg aria-hidden="true"><use href="#mark"/></svg>
+            VunaWise
         </a>
-        <a href="mailto:limo.m@vunawise.com?subject=VunaWise Demo Request" class="cta-card">
-            <div class="cta-card-icon">📅</div>
-            <h3>Book a Demo</h3>
-            <p>See VunaWise in action with your own farm's context in mind.</p>
-            <span class="card-link">Get in touch →</span>
-        </a>
-        <a href="mailto:limo.m@vunawise.com?subject=Free Farm Consultation" class="cta-card">
-            <div class="cta-card-icon">💬</div>
-            <h3>Free Consultation</h3>
-            <p>Tell us about your unique challenges. No pitch — just a conversation.</p>
-            <span class="card-link">Let's talk →</span>
-        </a>
+        <nav class="nav-links" aria-label="Main">
+            <a class="nav-text" href="#features">Features</a>
+            <a class="nav-text" href="#how">How it works</a>
+            <a class="nav-text" href="https://substack.com/@vunawise" target="_blank" rel="noopener">Blog</a>
+            <a class="btn btn-ghost" href="https://app.vunawise.com">Farm Login</a>
+            <a class="btn btn-primary" href="mailto:limo.m@vunawise.com?subject=VunaWise%20Demo%20Request">Book a demo</a>
+        </nav>
     </div>
-</section>
+</header>
+
+<main>
+    <!-- HERO -->
+    <section class="wrap hero">
+        <div>
+            <h1 class="h1">Data, then insights, then a better harvest.</h1>
+            <p class="lede">Put the farm notebook down. Record births, feeding, sales and harvests on your phone, and let VunaWise add it all up.</p>
+            <div class="cta-row">
+                <a class="btn btn-primary" href="mailto:limo.m@vunawise.com?subject=VunaWise%20Demo%20Request">Book a demo</a>
+                <a class="btn btn-ghost" href="#how">See how it works</a>
+            </div>
+        </div>
+
+        <div class="scene" role="img" aria-label="Handwritten notebook entries moving into the VunaWise app">
+            <div class="book" aria-hidden="true">
+                <div class="book-date">Sept</div>
+                <p class="hw d1">12/9 Sow 3 — 11 piglets, 2 died</p>
+                <p class="hw d2">Layers feed — 2 bags</p>
+                <p class="hw d3">Plot B maize sprayed</p>
+                <p class="hw d4">Sold 4 weaners <s>22,000</s> 24,000</p>
+                <p class="hw d5">Heifer vacc — ask Otieno??</p>
+            </div>
+            <div class="phone" aria-hidden="true">
+                <div class="phone-bar"><svg><use href="#mark"/></svg>Today’s records</div>
+                <ul class="recs">
+                    <li class="rec d1"><b>Sow 3 farrowed</b><span>11 born, 9 alive</span></li>
+                    <li class="rec d2"><b>Feed used</b><span>Layers mash, 2 bags</span></li>
+                    <li class="rec d3"><b>Plot B sprayed</b><span>Maize, 1.5 acres</span></li>
+                    <li class="rec d4"><b>Weaners sold</b><span>4 for KSh 24,000</span></li>
+                    <li class="rec d5 due"><b>Heifer vaccination</b><span>Due Thursday</span></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAPER FORGETS -->
+    <section class="section cream" aria-labelledby="paper-h">
+        <div class="wrap">
+            <div class="sec-head">
+                <h2 id="paper-h" class="h2">Paper forgets. People move on.</h2>
+                <p>Every farm keeps records somewhere. The trouble is where they end up.</p>
+            </div>
+            <div class="losses">
+                <figure>
+                    <svg viewBox="0 0 200 130" aria-hidden="true">
+                        <path d="M40 18h120v94H40z" fill="#FBFAF4" stroke="#0D1F12" stroke-width="3"/>
+                        <path d="M160 18v34l-10 6 8 8-9 7 11 9v30" fill="none" stroke="#F7F9F4" stroke-width="10"/>
+                        <path d="M160 18v34l-10 6 8 8-9 7 11 9v30" fill="none" stroke="#0D1F12" stroke-width="3" stroke-linejoin="round"/>
+                        <path d="M168 50l14 4-6 12 8 10-12 6 4 14-10-2" fill="#FBFAF4" stroke="#0D1F12" stroke-width="3" stroke-linejoin="round" transform="rotate(14 175 70)"/>
+                        <path d="M54 40h80M54 56h70M54 72h84M54 88h60" stroke="#8FA38F" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                    <figcaption><h3 class="h3">Pages tear</h3><p>Pages rip out, get rained on, or go missing with the whole book.</p></figcaption>
+                </figure>
+                <figure>
+                    <svg viewBox="0 0 200 130" aria-hidden="true">
+                        <path d="M40 18h120v94H40z" fill="#FBFAF4" stroke="#0D1F12" stroke-width="3"/>
+                        <path d="M54 40h84" stroke="#0D1F12" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M54 56h70" stroke="#0D1F12" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+                        <path d="M54 72h84" stroke="#0D1F12" stroke-width="3" stroke-linecap="round" opacity=".22"/>
+                        <path d="M54 88h60" stroke="#0D1F12" stroke-width="3" stroke-linecap="round" opacity=".08"/>
+                        <ellipse cx="118" cy="82" rx="26" ry="16" fill="#C9D9E6" opacity=".55"/>
+                    </svg>
+                    <figcaption><h3 class="h3">Ink fades</h3><p>Pencil smudges and ink runs. By next season nobody can read what the vet said.</p></figcaption>
+                </figure>
+                <figure>
+                    <svg viewBox="0 0 200 130" aria-hidden="true">
+                        <g fill="none" stroke="#0D1F12" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 112h160"/>
+                            <path d="M28 112V62h34v50"/>
+                            <path d="M22 64l23-18 23 18"/>
+                            <path d="M138 61v26m0 0l-10 24m10-24l12 22m-12-40l-12 12m12-12l13 10"/>
+                            <path d="M150 71l9 9"/>
+                            <path d="M176 104h10m-6-6 6 6-6 6"/>
+                        </g>
+                        <circle cx="138" cy="52" r="9" fill="#8ED44A" stroke="#0D1F12" stroke-width="3"/>
+                        <rect x="152" y="78" width="16" height="14" rx="3" fill="#008C44" stroke="#0D1F12" stroke-width="3"/>
+                        <path d="M150 34c0-12 34-12 34 0s-20 10-24 10l-8 6 2-8c-3-2-4-5-4-8z" fill="#fff" stroke="#0D1F12" stroke-width="2.5" stroke-linejoin="round"/>
+                        <path d="M158 30h18M158 37h12" stroke="#8FA38F" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                    <figcaption><h3 class="h3">Farmhands leave</h3><p>Your best worker knows which sow farrows next and when the heifers were vaccinated. When they leave, all of that leaves with them.</p></figcaption>
+                </figure>
+                <figure>
+                    <svg viewBox="0 0 200 130" aria-hidden="true">
+                        <rect x="62" y="8" width="76" height="116" rx="12" fill="#FBFAF4" stroke="#0D1F12" stroke-width="3"/>
+                        <rect x="74" y="28" width="54" height="40" rx="6" fill="#DCE8DA" stroke="#0D1F12" stroke-width="2.5"/>
+                        <path d="M80 40h30M80 48h38M80 56h24" stroke="#0D1F12" stroke-width="2.5" stroke-linecap="round" opacity=".3" transform="skewX(-8) translate(6 0)"/>
+                        <rect x="74" y="74" width="40" height="12" rx="6" fill="#DCE8DA"/>
+                        <rect x="92" y="92" width="36" height="12" rx="6" fill="#8ED44A"/>
+                    </svg>
+                    <figcaption><h3 class="h3">Updates come as blurry photos</h3><p>If you run the farm from a distance, a photo of the notebook sent once in a while is all you get to go on.</p></figcaption>
+                </figure>
+            </div>
+            <p class="answer">In VunaWise, every entry is saved the moment it’s made, belongs to the farm rather than the person who wrote it, and can be read from anywhere.</p>
+        </div>
+    </section>
+
+    <!-- MADE FOR MIXED FARMS -->
+    <section class="section" id="what-it-tracks">
+        <div class="wrap">
+            <div class="sec-head">
+                <h2 class="h2">Made for mixed farms</h2>
+                <p>Most Kenyan farms don’t do one thing. VunaWise keeps livestock and crops side by side, so you can compare what each part of the farm really earns.</p>
+            </div>
+            <ul class="ent">
+                <li><div class="ent-name">Pigs<small>Breeding and fattening</small></div><p>Services, farrowing, litter sizes, weaning weights, feed, treatments and sales. Deaths are recorded against the individual animal, so you see where losses happen and why.</p></li>
+                <li><div class="ent-name">Cattle<small>Dairy and beef</small></div><p>Herd register, milk records, breeding and calving, vaccinations and vet visits, with costs tied to the animals that incurred them.</p></li>
+                <li><div class="ent-name">Poultry<small>Chickens and ducks</small></div><p>Flocks, egg collection, feed use, mortality and sales, so you know which flock is paying for itself.</p></li>
+                <li><div class="ent-name">Crops<small>Maize, cabbage, sunflower and more</small></div><p>Plots, planting dates, inputs, spraying, labour and harvests, with yield and cost per plot season after season.</p></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section cream" id="features">
+        <div class="wrap">
+            <div class="sec-head">
+                <h2 class="h2">Everything your farm needs to grow</h2>
+                <p>From the day an animal is born to the day a crop is harvested, VunaWise keeps you informed and in control.</p>
+            </div>
+            <div class="features">
+                <div class="feature">
+                    <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg></div>
+                    <h3 class="h3">Financial tracking</h3>
+                    <p>Record every expense and sale. See exactly where your money goes and where your revenue comes from, by enterprise, by month and by category. No more guessing.</p>
+                    <span class="tag tag-live">Live now</span>
+                </div>
+                <div class="feature">
+                    <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 1.8 1.8.7-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"/></svg></div>
+                    <h3 class="h3">AI for agriculture</h3>
+                    <p>Research market prices for your specific crop variety. Get weather insights for your planting season. Make decisions based on data, not guesswork.</p>
+                    <span class="tag tag-soon">Coming soon</span>
+                </div>
+                <div class="feature">
+                    <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h4"/></svg></div>
+                    <h3 class="h3">Traceability and planning</h3>
+                    <p>Build lifecycle playbooks for your crops and animals. Know what’s coming weeks in advance, from vaccinations to harvests and labour needs, so you can plan and budget properly.</p>
+                    <span class="tag tag-live">Live now</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how">
+        <div class="wrap">
+            <div class="sec-head">
+                <h2 class="h2">From your first animal to your first harvest report</h2>
+            </div>
+            <div class="how-grid">
+                <ol class="steps">
+                    <li class="step">
+                        <span class="step-num">1</span>
+                        <div><h3 class="h3">Set up your farm</h3><p>Create your VunaWise account. Add your farm name, your team, and your enterprises: pigs, cattle, crops, poultry.</p></div>
+                    </li>
+                    <li class="step">
+                        <span class="step-num">2</span>
+                        <div><h3 class="h3">Build your playbooks</h3><p>Create lifecycle templates for your animals and crops. VunaWise calculates all task dates automatically from your planting or birth date.</p></div>
+                    </li>
+                    <li class="step">
+                        <span class="step-num">3</span>
+                        <div><h3 class="h3">Track daily operations</h3><p>Record sales, expenses, treatments and activities from the web or your phone. Your dashboard updates in real time.</p></div>
+                    </li>
+                    <li class="step">
+                        <span class="step-num">4</span>
+                        <div><h3 class="h3">Make smarter decisions</h3><p>See your net profit, identify your most productive enterprises, and plan your next season with confidence.</p></div>
+                    </li>
+                </ol>
+
+                <div class="dash">
+                    <div class="dash-head"><svg aria-hidden="true"><use href="#mark"/></svg>BM’s AgriFarm dashboard</div>
+                    <div class="metrics">
+                        <div class="metric">
+                            <div><div class="metric-label">Total revenue</div><div class="metric-bar-wrap"><div class="metric-bar" style="width:78%"></div></div></div>
+                            <div class="metric-value">KES 664K</div>
+                        </div>
+                        <div class="metric">
+                            <div><div class="metric-label">Active animals</div><div class="metric-bar-wrap"><div class="metric-bar" style="width:92%"></div></div></div>
+                            <div class="metric-value">255</div>
+                        </div>
+                        <div class="metric">
+                            <div><div class="metric-label">Net profit</div><div class="metric-bar-wrap"><div class="metric-bar" style="width:45%"></div></div></div>
+                            <div class="metric-value">KES 104K</div>
+                        </div>
+                        <div class="metric">
+                            <div><div class="metric-label">Upcoming tasks</div><div class="metric-bar-wrap"><div class="metric-bar" style="width:60%"></div></div></div>
+                            <div class="metric-value">12 this week</div>
+                        </div>
+                    </div>
+                    <p class="dash-note">Sample figures for illustration</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLOSING CTA -->
+    <section class="section" id="contact">
+        <div class="wrap closing">
+            <h2 class="h2">Ready to grow smarter?</h2>
+            <p>Join the farmers already using VunaWise to run better operations.</p>
+            <div class="options">
+                <a class="option" href="mailto:limo.m@vunawise.com?subject=VunaWise%20Demo%20Request">
+                    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></span>
+                    <h3 class="h3">Book a demo</h3>
+                    <p>See VunaWise in action with your own farm’s context in mind.</p>
+                    <span class="option-link">Get in touch</span>
+                </a>
+                <a class="option" href="mailto:limo.m@vunawise.com?subject=Free%20Farm%20Consultation">
+                    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg></span>
+                    <h3 class="h3">Free consultation</h3>
+                    <p>Tell us about your unique challenges. No pitch, just a conversation.</p>
+                    <span class="option-link">Let’s talk</span>
+                </a>
+                <a class="option" href="https://substack.com/@vunawise" target="_blank" rel="noopener">
+                    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 7l3 3"/></svg></span>
+                    <h3 class="h3">Follow on Substack</h3>
+                    <p>Farm insights, product updates and the story behind VunaWise.</p>
+                    <span class="option-link">Read the blog</span>
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
 
 <!-- FOOTER -->
 <footer>
-    <a href="#" class="footer-logo">
-        <img src="VunaWise.png" alt="VunaWise" onerror="this.style.display='none'">
-        <span>VunaWise</span>
-    </a>
-    <span class="footer-tagline">Data = Insights = Productivity</span>
-    <span class="footer-right">© 2026 VunaWise. Built in Kenya 🇰🇪</span>
+    <div class="wrap foot">
+        <a class="brand" href="#" aria-label="VunaWise home"><svg aria-hidden="true"><use href="#mark"/></svg>VunaWise</a>
+        <span>Data = Insights = Productivity</span>
+        <span>© 2026 VunaWise. Built in Kenya 🇰🇪</span>
+    </div>
 </footer>
 
 </body>
